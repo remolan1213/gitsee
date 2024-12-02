@@ -13,6 +13,11 @@ function App() {
       .get("http://localhost:3001/commits")
       .then((response) => setCommits(response.data.all))
       .catch((error) => console.error(error));
+
+    axios
+      .get("http://localhost:3001/list-files")
+      .then((response) => setFiles(response.data))
+      .catch((error) => console.error(error));
   }, []);
 
   const handlePathChange = (event) => {
@@ -46,6 +51,25 @@ function App() {
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{commit.message}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="section">
+        <h2 className="section-title text-left">Repository Files</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            {files.map((file, index) => (
+              <tr key={index}>
+                <td>{file.name}</td>
+                <td>{file.isDirectory ? "Directory" : "File"}</td>
               </tr>
             ))}
           </tbody>

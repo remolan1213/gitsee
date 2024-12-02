@@ -1,7 +1,8 @@
 const express = require('express');
 const simpleGit = require('simple-git');
 const cors = require('cors');
-
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 app.use(cors());
@@ -26,6 +27,20 @@ app.get('/files', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+app.get('/list-files', (req, res) => {
+  const directoryPath = path.join(__dirname, '../');
+  fs.readdir(directoryPath, { withFileTypes: true }, (err, files) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    const fileList = files.map(file => ({
+      name: file.name,
+      isDirectory: file.isDirectory()
+    }));
+    res.json(fileList);
+  });
 });
 
 const PORT = process.env.PORT || 3001;
