@@ -1,13 +1,25 @@
 const express = require('express');
 const simpleGit = require('simple-git');
+const cors = require('cors');
+
 
 const app = express();
+app.use(cors());
 const git = simpleGit();
 
 app.get('/commits', async (req, res) => {
   try {
     const log = await git.log();
     res.json(log);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/files', async (req, res) => {
+  try {
+    const status = await git.status();
+    res.json(status.files);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
