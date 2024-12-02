@@ -5,6 +5,7 @@ import axios from "axios";
 function App() {
   const [commits, setCommits] = useState([]);
   const [files, setFiles] = useState([]);
+  const [path, setPath] = useState("");
 
   useEffect(() => {
     axios
@@ -13,15 +14,19 @@ function App() {
       .catch((error) => console.error(error));
   }, []);
 
-  useEffect(() => {
+  const handlePathChange = (event) => {
+    setPath(event.target.value);
+  };
+
+  const fetchFiles = () => {
     axios
-      .get("http://localhost:3001/files")
+      .post("http://localhost:3001/files", { path })
       .then((response) => {
         console.log(response.data);
         setFiles(response.data);
       })
       .catch((error) => console.error(error));
-  }, []);
+  };
 
   return (
     <div>
@@ -32,6 +37,13 @@ function App() {
         ))}
       </ul>
       <h2>Files</h2>
+      <input
+        type="text"
+        value={path}
+        onChange={handlePathChange}
+        placeholder="Enter repository path"
+      />
+      <button onClick={fetchFiles}>Fetch Files</button>
       <ul>
         {files.map((file, index) => (
           <li key={index}>{file.path}</li>

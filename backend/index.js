@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 const git = simpleGit();
 
 app.get('/commits', async (req, res) => {
@@ -16,8 +17,10 @@ app.get('/commits', async (req, res) => {
   }
 });
 
-app.get('/files', async (req, res) => {
+app.post('/files', async (req, res) => {
+  const { path } = req.body;
   try {
+    const git = simpleGit(path); // Initialize with the provided path
     const status = await git.status();
     res.json(status.files);
   } catch (error) {
