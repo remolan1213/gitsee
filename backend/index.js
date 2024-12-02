@@ -17,8 +17,8 @@ app.get('/commits', async (req, res) => {
   }
 });
 
-app.post('/files', async (req, res) => {
-  const { path } = req.body;
+app.get('/files', async (req, res) => {
+  const path = req.query.path;
   try {
     const git = simpleGit(path); // Initialize with the provided path
     const status = await git.status();

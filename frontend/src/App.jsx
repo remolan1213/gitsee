@@ -21,7 +21,7 @@ function App() {
 
   const fetchFiles = () => {
     axios
-      .post("http://localhost:3001/files", { path })
+      .get(`http://localhost:3001/files?path=${encodeURIComponent(path)}`)
       .then((response) => {
         console.log(response.data);
         setFiles(response.data);
